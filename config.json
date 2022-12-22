@@ -1,9 +1,26 @@
 {
-    "SearchSubdiramazioni":{
-        "url": "https://tsarcgis.aqp.it/server/rest/services/Operational/QUERY_SCHEMA_GESTORE_GO_CON_NODI/FeatureServer",
-        "layerId": 19,
-        "queryWhere": "IDSCHEMA is not null",
-        "outFields": ["*"]
-      }
-    
+  "SearchSubdiramazioni": {
+    "url": "https://tsarcgis.aqp.it/server/rest/services/Operational/QUERY_SCHEMA_GESTORE_GO_CON_NODI/FeatureServer",
+    "layerId": 19,
+    "queryWhere": "IDSCHEMA is not null",
+    "outFields": ["*"]
+  },
+  "SearchDiramzion": {
+    "url": "https://tsarcgis.aqp.it/server/rest/services/Operational/QUERY_SCHEMA_GESTORE_GO_CON_NODI/FeatureServer",
+    "layerId": 20,
+    "queryWhere": "Search Diramzion",
+    "outFields": ["*"]
+  },
+  "SearchVettori": {
+    "url": "https://tsarcgis.aqp.it/server/rest/services/Operational/QUERY_SCHEMA_GESTORE_GO_CON_NODI/FeatureServer",
+    "layerId": 22,
+    "queryWhere": "Search Vettori",
+    "outFields": ["*"]
+  },
+  "SearchSit": {
+    "url": "https://tsarcgis.aqp.it/server/rest/services/Operational/QUERY_SCHEMA_GESTORE_GO_CON_NODI/FeatureServer",
+    "layerId": 22,
+    "queryWhere": "Search Sit",
+    "outFields": ["*"]
+  }
 }

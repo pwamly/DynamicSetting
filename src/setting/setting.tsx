@@ -8,45 +8,66 @@ import {
   SettingRow,
 } from "jimu-ui/advanced/setting-components";
 import { DataSourceSelector } from "jimu-ui/advanced/data-source-selector";
+import { Dropdown, DropdownButton, DropdownMenu, DropdownItem } from "jimu-ui";
+import { Select, Option } from "jimu-ui";
+
 import { IMConfig } from "../../config";
-import conf from "../../config.json";
+import SelectState from "dist/widgets/arcgis/arcgis-map/src/runtime/tools/selectstate";
+
 // import defaultI18nMessages from './translations/default'
 
 export default class Setting extends React.PureComponent<
   AllWidgetSettingProps<IMConfig>,
   any
 > {
+  state = {
+    selectedLayer: "SearchSubdiramazioni",
+  };
+
   onMapWidgetSelected = (useMapWidgetIds: string[]) => {
     this.props.onSettingChange({
       id: this.props.id,
       useMapWidgetIds: useMapWidgetIds,
     });
   };
+
   onURLChange = (evt: React.FormEvent<HTMLInputElement>) => {
     this.props.onSettingChange({
       id: this.props.id,
-      config: this.props.config.set("p1", evt.currentTarget.value),
+      config: this.props.config[this.state.selectedLayer].set(
+        "url",
+        evt.currentTarget.value
+      ),
     });
   };
 
   onlayerIdChange = (evt: React.FormEvent<HTMLInputElement>) => {
     this.props.onSettingChange({
       id: this.props.id,
-      config: this.props.config.set("p2", evt.currentTarget.value),
+      config: this.props.config[this.state.selectedLayer].set(
+        "layerId",
+        evt.currentTarget.value
+      ),
     });
   };
 
   onqueryWhereChange = (evt: React.FormEvent<HTMLInputElement>) => {
     this.props.onSettingChange({
       id: this.props.id,
-      config: this.props.config.set("p2", evt.currentTarget.value),
+      config: this.props.config[this.state.selectedLayer].set(
+        "queryWhere",
+        evt.currentTarget.value
+      ),
     });
   };
 
   onoutFieldsChange = (evt: React.FormEvent<HTMLInputElement>) => {
     this.props.onSettingChange({
       id: this.props.id,
-      config: this.props.config.set("p2", evt.currentTarget.value),
+      config: this.props.config[this.state.selectedLayer].set(
+        "outFields",
+        evt.currentTarget.value
+      ),
     });
   };
 
@@ -57,33 +78,61 @@ export default class Setting extends React.PureComponent<
           useMapWidgetIds={this.props.useMapWidgetIds}
           onSelect={this.onMapWidgetSelected}
         />
-
+        <Select
+          onChange={(e) => {
+            this.setState({ selectedLayer: e.target.value });
+            console.log("", this.state.selectedLayer);
+          }}
+          toggle={(e) => {}}
+          placeholder="Select a destination..."
+        >
+          <Option header>Domestic</Option>
+          {Object.keys(this.props.config).map((el, i) => (
+            <Option id={i} value={el}>
+              <div className="text-truncate">{el}</div>
+            </Option>
+          ))}
+        </Select>
         <SettingSection>
           <SettingRow label={"url"}>
-            <input
-              defaultValue={this.props.config.SearchSubdiramazioni.url}
-              onChange={this.onURLChange}
-            />
+            {this.state.selectedLayer && (
+              <input
+                defaultValue={this.props.config[this.state.selectedLayer].url}
+                onChange={this.onURLChange}
+              />
+            )}
           </SettingRow>
-          <SettingRow label={"layerId"}>
-            {" "}
-            <input
-              defaultValue={this.props.config.SearchSubdiramazioni.layerId}
-              onChange={this.onlayerIdChange}
-            />
-          </SettingRow>
+          {this.state.selectedLayer && (
+            <SettingRow label={"layerId"}>
+              <input
+                defaultValue={
+                  this.state.selectedLayer &&
+                  this.props.config[this.state.selectedLayer].layerId
+                }
+                onChange={this.onlayerIdChange}
+              />
+            </SettingRow>
+          )}
           <SettingRow label={"queryWhere"}>
-            <input
-              defaultValue={this.props.config.SearchSubdiramazioni.queryWhere}
-              onChange={this.onqueryWhereChange}
-            />
+            {this.state.selectedLayer && (
+              <input
+                defaultValue={
+                  this.props.config[this.state.selectedLayer].queryWhere
+                }
+                onChange={this.onqueryWhereChange}
+              />
+            )}
           </SettingRow>
           <SettingRow label={"outFields"}>
             {" "}
-            <input
-              defaultValue={this.props.config.SearchSubdiramazioni.outFields[0]}
-              onChange={this.onoutFieldsChange}
-            />
+            {this.state.selectedLayer && (
+              <input
+                defaultValue={
+                  this.props.config[this.state.selectedLayer].outFields[0]
+                }
+                onChange={this.onoutFieldsChange}
+              />
+            )}
           </SettingRow>
         </SettingSection>
       </div>
