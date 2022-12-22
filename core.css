@@ -1,0 +1,47 @@
+
+.btn-delete{
+    /* color: #ff003b; */
+    background: #ff003b;
+}
+
+.btn-delete:after{
+    color: rgb(107, 100, 100);
+    transition: all .35s;
+
+  }
+  
+  .btn-delete:hover{
+    color: rgb(107, 100, 100);
+    cursor: pointer;
+
+  }
+  
+  .btn-snap{
+    /* color: #ff003b; */
+    background: rgb(0,94,202)
+}
+
+.btn-snap:after{
+    color: rgb(77, 75, 75);
+    transition: all .35s;
+
+  }
+  
+  .btn-snap:hover{
+    color: rgb(77, 75, 75);
+    cursor: pointer;
+
+  }
+  
+  .btn-snap-focus{
+    color: rgb(77, 75, 75);
+    background: rgb(151, 192, 240)
+}
+
+.btn-snap-focus:after{
+    color: rgb(77, 75, 75);
+    transition: all .35s;
+
+  }
+  
+  
