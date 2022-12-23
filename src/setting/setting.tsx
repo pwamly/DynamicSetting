@@ -7,12 +7,8 @@ import {
   SettingSection,
   SettingRow,
 } from "jimu-ui/advanced/setting-components";
-import { DataSourceSelector } from "jimu-ui/advanced/data-source-selector";
-import { Dropdown, DropdownButton, DropdownMenu, DropdownItem } from "jimu-ui";
 import { Select, Option } from "jimu-ui";
-
 import { IMConfig } from "../../config";
-import SelectState from "dist/widgets/arcgis/arcgis-map/src/runtime/tools/selectstate";
 
 // import defaultI18nMessages from './translations/default'
 
@@ -21,9 +17,20 @@ export default class Setting extends React.PureComponent<
   any
 > {
   state = {
-    selectedLayer: "SearchSubdiramazioni",
+    selectedLayer: null,
     show:true
   };
+
+    onServerNameChange = (evt: React.FormEvent<HTMLInputElement>) => {
+      let con=this.props.config.set(
+        this.state.selectedLayer,
+        {...this.props.config[this.state.selectedLayer],"url":evt.currentTarget.value}
+      );
+      this.props.onSettingChange({
+        id: this.props.id,
+        config: con,
+      });
+    };
 
   onMapWidgetSelected = (useMapWidgetIds: string[]) => {
     this.props.onSettingChange({
@@ -98,7 +105,7 @@ export default class Setting extends React.PureComponent<
           }}
           placeholder="Select a destination..."
         >
-          <Option header>Domestic</Option>
+          {/* <Option header>Domestic</Option> */}
           {Object.keys(this.props.config).map((el, i) => (
             <Option id={i} value={el} >
               <div className="text-truncate" onMouseOver={()=>this.setState({show:false})} onClick={()=>this.setState({show:true})}>{el}</div>
@@ -106,19 +113,26 @@ export default class Setting extends React.PureComponent<
           ))}
         </Select>
         {this.state.show&&<SettingSection>
-          <SettingRow label={"url"}>
+          <SettingRow label={"Server Name"}>
             {this.state.selectedLayer && (
               <input
-                defaultValue={this.props.config[this.state.selectedLayer].url}
-                onChange={this.onURLChange}
+                defaultValue={''}
+                onChange={this.onServerNameChange}
               />
             )}
+          </SettingRow>
+          <SettingRow label={"url"}>
+            
+              <input
+                defaultValue={this.props.config[this.state.selectedLayer]?.url || ''}
+                onChange={this.onURLChange}
+              />
           </SettingRow>
             <SettingRow label={"layerId"}>
               <input
                 defaultValue={
                   this.state.show &&
-                  this.props.config[this.state.selectedLayer].layerId
+                  this.props.config[this.state.selectedLayer]?.layerId || ''
                 }
                 onChange={this.onlayerIdChange}
               />
@@ -128,7 +142,7 @@ export default class Setting extends React.PureComponent<
             {this.state.show && (
               <input
                 defaultValue={
-                  this.props.config[this.state.selectedLayer].queryWhere
+                  this.props.config[this.state.selectedLayer]?.queryWhere || ''
                 }
                 onChange={this.onqueryWhereChange}
               />
@@ -138,7 +152,7 @@ export default class Setting extends React.PureComponent<
             {this.state.show && (
               <input
                 defaultValue={
-                  this.props.config[this.state.selectedLayer].outFields[0]
+                  this.props?.config[this.state.selectedLayer]?.outFields[0] || ''
                 }
                 onChange={this.onoutFieldsChange}
               />
