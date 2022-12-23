@@ -35,7 +35,7 @@ export default class Setting extends React.PureComponent<
   onURLChange = (evt: React.FormEvent<HTMLInputElement>) => {
     let con=this.props.config.set(
       this.state.selectedLayer,
-      {...this.props.config[this.state.selectedLayer],"url":Number(evt.currentTarget.value)}
+      {...this.props.config[this.state.selectedLayer],"url":evt.currentTarget.value}
     );
     this.props.onSettingChange({
       id: this.props.id,
@@ -57,7 +57,7 @@ export default class Setting extends React.PureComponent<
   onqueryWhereChange = (evt: React.FormEvent<HTMLInputElement>) => {
     let con=this.props.config.set(
       this.state.selectedLayer,
-      {...this.props.config[this.state.selectedLayer],"queryWhere":Number(evt.currentTarget.value)}
+      {...this.props.config[this.state.selectedLayer],"queryWhere":evt.currentTarget.value}
     );
     this.props.onSettingChange({
       id: this.props.id,
@@ -67,9 +67,16 @@ export default class Setting extends React.PureComponent<
   };
 
   onoutFieldsChange = (evt: React.FormEvent<HTMLInputElement>) => {
+    let inputvalue = evt.currentTarget.value
+    let arr =['*'];
+    if (inputvalue.indexOf(',') > -1) {
+      arr = inputvalue.split(',');
+     }else{
+      arr=[inputvalue];
+     }
     let con=this.props.config.set(
       this.state.selectedLayer,
-      {...this.props.config[this.state.selectedLayer],"outFields":Number(evt.currentTarget.value)}
+      {...this.props.config[this.state.selectedLayer],"outFields":arr}
     );
     this.props.onSettingChange({
       id: this.props.id,
