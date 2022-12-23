@@ -22,6 +22,7 @@ export default class Setting extends React.PureComponent<
 > {
   state = {
     selectedLayer: "SearchSubdiramazioni",
+    show:true
   };
 
   onMapWidgetSelected = (useMapWidgetIds: string[]) => {
@@ -32,42 +33,47 @@ export default class Setting extends React.PureComponent<
   };
 
   onURLChange = (evt: React.FormEvent<HTMLInputElement>) => {
+    let con=this.props.config.set(
+      this.state.selectedLayer,
+      {...this.props.config[this.state.selectedLayer],"url":Number(evt.currentTarget.value)}
+    );
     this.props.onSettingChange({
       id: this.props.id,
-      config: this.props.config[this.state.selectedLayer].set(
-        "url",
-        evt.currentTarget.value
-      ),
+      config: con,
     });
   };
 
   onlayerIdChange = (evt: React.FormEvent<HTMLInputElement>) => {
+    let con=this.props.config.set(
+      this.state.selectedLayer,
+      {...this.props.config[this.state.selectedLayer],"layerId":Number(evt.currentTarget.value)}
+    );
     this.props.onSettingChange({
       id: this.props.id,
-      config: this.props.config[this.state.selectedLayer].set(
-        "layerId",
-        evt.currentTarget.value
-      ),
+      config: con,
     });
   };
 
   onqueryWhereChange = (evt: React.FormEvent<HTMLInputElement>) => {
+    let con=this.props.config.set(
+      this.state.selectedLayer,
+      {...this.props.config[this.state.selectedLayer],"queryWhere":Number(evt.currentTarget.value)}
+    );
     this.props.onSettingChange({
       id: this.props.id,
-      config: this.props.config[this.state.selectedLayer].set(
-        "queryWhere",
-        evt.currentTarget.value
-      ),
+      config: con,
     });
+
   };
 
   onoutFieldsChange = (evt: React.FormEvent<HTMLInputElement>) => {
+    let con=this.props.config.set(
+      this.state.selectedLayer,
+      {...this.props.config[this.state.selectedLayer],"outFields":Number(evt.currentTarget.value)}
+    );
     this.props.onSettingChange({
       id: this.props.id,
-      config: this.props.config[this.state.selectedLayer].set(
-        "outFields",
-        evt.currentTarget.value
-      ),
+      config: con,
     });
   };
 
@@ -81,19 +87,18 @@ export default class Setting extends React.PureComponent<
         <Select
           onChange={(e) => {
             this.setState({ selectedLayer: e.target.value });
-            console.log("", this.state.selectedLayer);
+            this.setState({show:true});
           }}
-          toggle={(e) => {}}
           placeholder="Select a destination..."
         >
           <Option header>Domestic</Option>
           {Object.keys(this.props.config).map((el, i) => (
-            <Option id={i} value={el}>
-              <div className="text-truncate">{el}</div>
+            <Option id={i} value={el} >
+              <div className="text-truncate" onMouseOver={()=>this.setState({show:false})} onClick={()=>this.setState({show:true})}>{el}</div>
             </Option>
           ))}
         </Select>
-        <SettingSection>
+        {this.state.show&&<SettingSection>
           <SettingRow label={"url"}>
             {this.state.selectedLayer && (
               <input
@@ -102,19 +107,18 @@ export default class Setting extends React.PureComponent<
               />
             )}
           </SettingRow>
-          {this.state.selectedLayer && (
             <SettingRow label={"layerId"}>
               <input
                 defaultValue={
-                  this.state.selectedLayer &&
+                  this.state.show &&
                   this.props.config[this.state.selectedLayer].layerId
                 }
                 onChange={this.onlayerIdChange}
               />
             </SettingRow>
-          )}
+          
           <SettingRow label={"queryWhere"}>
-            {this.state.selectedLayer && (
+            {this.state.show && (
               <input
                 defaultValue={
                   this.props.config[this.state.selectedLayer].queryWhere
@@ -124,8 +128,7 @@ export default class Setting extends React.PureComponent<
             )}
           </SettingRow>
           <SettingRow label={"outFields"}>
-            {" "}
-            {this.state.selectedLayer && (
+            {this.state.show && (
               <input
                 defaultValue={
                   this.props.config[this.state.selectedLayer].outFields[0]
@@ -134,7 +137,7 @@ export default class Setting extends React.PureComponent<
               />
             )}
           </SettingRow>
-        </SettingSection>
+        </SettingSection>}
       </div>
     );
   }
