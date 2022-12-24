@@ -17,19 +17,13 @@ export default class Setting extends React.PureComponent<
   any
 > {
   state = {
-    selectedLayer: null,
+    selectedLayer: Object.keys(this.props.config)[0],
+    serverName:null,
     show:true
   };
 
     onServerNameChange = (evt: React.FormEvent<HTMLInputElement>) => {
-      let con=this.props.config.set(
-        this.state.selectedLayer,
-        {...this.props.config[this.state.selectedLayer],"url":evt.currentTarget.value}
-      );
-      this.props.onSettingChange({
-        id: this.props.id,
-        config: con,
-      });
+      this.setState({serverName:evt.currentTarget.value});
     };
 
   onMapWidgetSelected = (useMapWidgetIds: string[]) => {
@@ -40,8 +34,9 @@ export default class Setting extends React.PureComponent<
   };
 
   onURLChange = (evt: React.FormEvent<HTMLInputElement>) => {
+    let server = this.state.selectedLayer || this.state.serverName;
     let con=this.props.config.set(
-      this.state.selectedLayer,
+      this.state.selectedLayer || this.state.serverName,
       {...this.props.config[this.state.selectedLayer],"url":evt.currentTarget.value}
     );
     this.props.onSettingChange({
@@ -103,7 +98,7 @@ export default class Setting extends React.PureComponent<
             this.setState({ selectedLayer: e.target.value });
             this.setState({show:true});
           }}
-          placeholder="Select a destination..."
+          placeholder="Select Server"
         >
           {/* <Option header>Domestic</Option> */}
           {Object.keys(this.props.config).map((el, i) => (
@@ -111,16 +106,17 @@ export default class Setting extends React.PureComponent<
               <div className="text-truncate" onMouseOver={()=>this.setState({show:false})} onClick={()=>this.setState({show:true})}>{el}</div>
             </Option>
           ))}
+          <Option ><div className="text-truncate"  onClick={()=>{this.setState({ selectedLayer: null });this.setState({show:true})}}>Add New Server</div> </Option>
         </Select>
         {this.state.show&&<SettingSection>
-          <SettingRow label={"Server Name"}>
-            {this.state.selectedLayer && (
+          {this.state.selectedLayer==null&&<SettingRow label={"Server Name"}>
+            
               <input
-                defaultValue={''}
+                defaultValue={this.state.selectedLayer?this.state.selectedLayer:''}
                 onChange={this.onServerNameChange}
               />
-            )}
-          </SettingRow>
+            
+          </SettingRow>}
           <SettingRow label={"url"}>
             
               <input
@@ -152,7 +148,7 @@ export default class Setting extends React.PureComponent<
             {this.state.show && (
               <input
                 defaultValue={
-                  this.props?.config[this.state.selectedLayer]?.outFields[0] || ''
+                  this.props.config[this.state.selectedLayer]?.outFields[0]  || ''
                 }
                 onChange={this.onoutFieldsChange}
               />
