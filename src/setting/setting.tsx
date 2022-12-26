@@ -36,8 +36,8 @@ export default class Setting extends React.PureComponent<
   onURLChange = (evt: React.FormEvent<HTMLInputElement>) => {
     let server = this.state.selectedLayer || this.state.serverName;
     let con=this.props.config.set(
-      this.state.selectedLayer || this.state.serverName,
-      {...this.props.config[this.state.selectedLayer],"url":evt.currentTarget.value}
+      server,
+      {...this.props.config[server],"url":evt.currentTarget.value}
     );
     this.props.onSettingChange({
       id: this.props.id,
@@ -46,9 +46,10 @@ export default class Setting extends React.PureComponent<
   };
 
   onlayerIdChange = (evt: React.FormEvent<HTMLInputElement>) => {
+    let server = this.state.selectedLayer || this.state.serverName;
     let con=this.props.config.set(
-      this.state.selectedLayer,
-      {...this.props.config[this.state.selectedLayer],"layerId":Number(evt.currentTarget.value)}
+      server,
+      {...this.props.config[server],"layerId":Number(evt.currentTarget.value)}
     );
     this.props.onSettingChange({
       id: this.props.id,
@@ -57,9 +58,10 @@ export default class Setting extends React.PureComponent<
   };
 
   onqueryWhereChange = (evt: React.FormEvent<HTMLInputElement>) => {
+    let server = this.state.selectedLayer || this.state.serverName;
     let con=this.props.config.set(
-      this.state.selectedLayer,
-      {...this.props.config[this.state.selectedLayer],"queryWhere":evt.currentTarget.value}
+      server,
+      {...this.props.config[server],"queryWhere":evt.currentTarget.value}
     );
     this.props.onSettingChange({
       id: this.props.id,
@@ -69,6 +71,7 @@ export default class Setting extends React.PureComponent<
   };
 
   onoutFieldsChange = (evt: React.FormEvent<HTMLInputElement>) => {
+    let server = this.state.selectedLayer || this.state.serverName;
     let inputvalue = evt.currentTarget.value
     let arr =['*'];
     if (inputvalue.indexOf(',') > -1) {
@@ -77,8 +80,8 @@ export default class Setting extends React.PureComponent<
       arr=[inputvalue];
      }
     let con=this.props.config.set(
-      this.state.selectedLayer,
-      {...this.props.config[this.state.selectedLayer],"outFields":arr}
+      server,
+      {...this.props.config[server],"outFields":arr}
     );
     this.props.onSettingChange({
       id: this.props.id,
@@ -148,7 +151,7 @@ export default class Setting extends React.PureComponent<
             {this.state.show && (
               <input
                 defaultValue={
-                  this.props.config[this.state.selectedLayer]?.outFields[0]  || ''
+                  this.props.config[this.state.selectedLayer]?.outFields?this.props.config[this.state.selectedLayer]?.outFields[0]  : ''
                 }
                 onChange={this.onoutFieldsChange}
               />
