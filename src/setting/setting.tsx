@@ -2,7 +2,6 @@
 import { MapWidgetSelector } from "jimu-ui/advanced/setting-components";
 import { React, jsx, Immutable, FormattedMessage } from "jimu-core";
 import { AllWidgetSettingProps } from "jimu-for-builder";
-import { DataSourceTypes } from "jimu-arcgis";
 import {
   SettingSection,
   SettingRow,
@@ -10,10 +9,6 @@ import {
 import { Select, Option } from "jimu-ui";
 import { IMConfig } from "../../config";
 import helper from "./helper";
-import Query from "@arcgis/core/rest/support/Query";
-import * as query from "@arcgis/core/rest/query";
-import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-const axios = require('axios');
 // import defaultI18nMessages from './translations/default'
 
 export default class Setting extends React.PureComponent<

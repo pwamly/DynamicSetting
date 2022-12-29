@@ -5,41 +5,30 @@ import { Card } from "jimu-ui";
 import { InfoOutlined } from "jimu-icons/outlined/suggested/info";
 import { Select, Option } from "jimu-ui";
 import helper from "../setting/helper";
-
-import Query from "@arcgis/core/rest/support/Query";
-import * as query from "@arcgis/core/rest/query";
-import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
-const axios = require('axios');
-
-
 import "../../core.css";
-// import LayerList from "esri/widgets/LayerList";
+import { isArray } from "lodash-es";
 
 export default class Widget extends React.PureComponent<
   AllWidgetProps<any>,
   any
 > {
   constructor(props) {
-        super(props); 
-        this.state = { "layerList": [] };
-    Object.values(this.props.config).reduce(async (acc, cvalue)=> {
-       let name= await helper.queryLayers(cvalue);
-       
-       if (name) {
-         this.setState({"layerList":{...name}});
-       }
-       return acc;
-     }, []);  }
+    super(props);
 
-
+    Object.values(this.props.config).reduce(async (acc, cvalue) => {
+      let Layerdata = await helper.queryLayers(cvalue);
+      if (Layerdata) {
+        acc.push({ [Layerdata.name]: Layerdata });
+      }
+      this.setState({ layerList: acc });
+      return acc;
+    }, []);
+  }
+  state = { layerList: [] };
 
   activeViewChangeHandler = (jmv: JimuMapView) => {};
 
-
-
   render() {
-
-
     return (
       <div
         className="widget-starter jimu-widget"
@@ -63,16 +52,20 @@ export default class Widget extends React.PureComponent<
             </h5>
           </div>
         </Card>
-
         <div style={{}}>
           <div style={{}}>
             <Select onChange={(e) => {}} placeholder="Seleziona un comune">
               {/* <Option header></Option> */}
-              {[].map((el, i) => (
-                <Option id={i} value={el}>
-                  <div className="text-truncate">{el.name}</div>
-                </Option>
-              ))}
+              {isArray(this.state.layerList) &&
+                this.state.layerList.map((el, i) => (
+                  <Option id={i} value={el}>
+                    <div className="text-truncate">
+                      {Object.keys(el)[0] +
+                        " - " +
+                        Object.values(el)[0]["queryresult"].features.length}
+                    </div>
+                  </Option>
+                ))}
             </Select>
           </div>
         </div>
