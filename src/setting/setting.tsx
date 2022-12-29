@@ -10,7 +10,10 @@ import {
 import { Select, Option } from "jimu-ui";
 import { IMConfig } from "../../config";
 import helper from "./helper";
-
+import Query from "@arcgis/core/rest/support/Query";
+import * as query from "@arcgis/core/rest/query";
+import FeatureLayer from "@arcgis/core/layers/FeatureLayer";
+const axios = require('axios');
 // import defaultI18nMessages from './translations/default'
 
 export default class Setting extends React.PureComponent<
@@ -22,12 +25,13 @@ export default class Setting extends React.PureComponent<
     serverName: null,
     show: true,
   };
+  layerList:{}
 
+  
   onServerNameChange = (evt: React.FormEvent<HTMLInputElement>) => {
     if (helper.isEmpty(evt.currentTarget.value)) {
       return;
     }
-
     this.setState({ serverName: evt.currentTarget.value });
   };
 
@@ -57,7 +61,7 @@ export default class Setting extends React.PureComponent<
     let server = this.state.selectedLayer || this.state.serverName;
     let con = this.props.config.set(server, {
       ...this.props.config[server],
-      layerId: Number(evt.currentTarget.value),
+      layerId: evt.currentTarget.value,
     });
     if (helper.isEmpty(server)) {
       return;
@@ -105,6 +109,7 @@ export default class Setting extends React.PureComponent<
     });
   };
 
+  
   render() {
     return (
       <div className="widget-setting">
@@ -116,7 +121,8 @@ export default class Setting extends React.PureComponent<
           onChange={(e) => {
             this.setState({ selectedLayer: e.target.value });
             this.setState({ show: true });
-          }}
+}}
+          
           placeholder="Select Server"
         >
           {/* <Option header>Domestic</Option> */}
@@ -191,7 +197,7 @@ export default class Setting extends React.PureComponent<
                   defaultValue={
                     this.props.config[this.state.selectedLayer]?.outFields
                       ? this.props.config[this.state.selectedLayer]
-                          ?.outFields[0]
+                          ?.outFields.toString()
                       : ""
                   }
                   onChange={this.onoutFieldsChange}
