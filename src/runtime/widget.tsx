@@ -14,17 +14,17 @@ export default class Widget extends React.PureComponent<
 > {
   constructor(props) {
     super(props);
-
-    Object.values(this.props.config).reduce(async (acc, cvalue) => {
-      let Layerdata = await helper.queryLayers(cvalue);
-      if (Layerdata) {
-        acc.push({ [Layerdata.name]: Layerdata });
-      }
-      this.setState({ layerList: acc });
-      return acc;
-    }, []);
   }
   state = { layerList: [] };
+
+  arr = [];
+  layerinfo = Object.values(this.props.config).map(async (el, i) => {
+    let Layerdata = await helper.queryLayers(el);
+    if (Layerdata) {
+      let ob = { [Layerdata.name]: Layerdata };
+      this.setState({ layerList: [ob, ...this.state.layerList] });
+    }
+  });
 
   activeViewChangeHandler = (jmv: JimuMapView) => {};
 

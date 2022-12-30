@@ -22,7 +22,6 @@ class Helper {
             const layerInfo = await axios.get(`${configobject.url + '/' + configobject.layerId}?f=pjson`);
             return { ...layerInfo.data, queryresult };
         } catch (error) {
-            return null;
         }
 
     }
